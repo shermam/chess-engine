@@ -1,5 +1,3 @@
-// @ts-check
-
 export const EMPTY = 0;
 export const p = {
   w: {
@@ -19,6 +17,9 @@ export const p = {
     KING: -126,
   },
 };
+
+export const WHITE_PIECES = new Set(Object.values(p.w));
+export const BLACK_PIECES = new Set(Object.values(p.b));
 
 export const initialPosition = new Int8Array([
   // Row 8

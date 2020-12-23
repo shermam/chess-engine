@@ -1,5 +1,3 @@
-// @ts-check
-
 export const pieceMap = new Map([
   [3, "♙"],
   [15, "♖"],
@@ -26,7 +24,7 @@ export const createSquare = (piece, index) => {
   square.classList.add("square");
   square.classList.add(((index / 8) | 0) % 2 ^ index % 2 ? "dark" : "light");
   square.setAttribute("index", index.toString());
-  square.innerText = pieceMap.get(piece);
+  square.innerText = pieceMap.get(piece) ?? "";
   return square;
 };
 
