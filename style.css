@@ -12,6 +12,8 @@ body {
   background-color: red;
   width: 1600px;
   height: 1600px;
+  cursor: pointer;
+  user-select: none;
 }
 
 .square {
