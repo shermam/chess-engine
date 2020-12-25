@@ -459,3 +459,40 @@ export function getKnightMoves(index, position) {
 
   return possibleMoves;
 }
+
+/**
+ * @param whitesTurn {boolean}
+ * @param position {Int8Array}
+ * @returns {Int8Array[]}
+ */
+export function getAvailablePositions(whitesTurn, position) {
+  const possibleMoves = getAvailableMoves(whitesTurn, position);
+  return possibleMoves.map(generateNewPosition(position));
+}
+
+/**
+ * @param position {Int8Array}
+ * @returns {(param: [number, number]) => Int8Array}
+ */
+export const generateNewPosition = (position) => ([from, to]) => {
+  const newPosition = new Int8Array(position.length);
+  newPosition.set(position);
+  const piece = newPosition[from];
+  if (!piece) throw new Error("No piece found on origin square");
+
+  newPosition[to] = piece;
+  newPosition[from] = EMPTY;
+
+  // Handle promotion
+  // For now I am always promoting to queen
+  // TODO (@shermam) Add a mechanism to allow
+  // promotion to other types of pieces
+  const y = (to / 8) | 0;
+  if (piece === p.w.PAWN && y === 7) {
+    newPosition[to] = p.w.QUEEN;
+  } else if (piece === p.b.PAWN && y === 0) {
+    newPosition[to] = p.b.QUEEN;
+  }
+
+  return newPosition;
+};

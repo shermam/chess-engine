@@ -1,5 +1,4 @@
-import { EMPTY, p } from "./board.js";
-import { getAvailableMoves } from "./movesLogic.js";
+import { getAvailableMoves, getAvailablePositions } from "./movesLogic.js";
 
 /**
  * @param position {Int8Array}
@@ -22,32 +21,16 @@ export function getRandomMove(position, isWhitesTurn) {
  * @param isWhitesTurn {boolean}
  */
 export function getMoveWithBestImmediateEvaluation(position, isWhitesTurn) {
-  const possibleMoves = getAvailableMoves(isWhitesTurn, position);
-  const evaluated = possibleMoves
-    .map(([from, to]) => {
-      const newPosition = new Int8Array(position.length);
-      newPosition.set(position);
+  const possiblePositions = getAvailablePositions(isWhitesTurn, position);
 
-      /** COPIED section. TODO make it reusable */
-      const piece = newPosition[from];
-      if (!piece) return;
-      newPosition[to] = piece;
-      newPosition[from] = EMPTY;
+  if (!possiblePositions.length) throw new Error("GAME OVER");
 
-      const y = (to / 8) | 0;
-      if (piece === p.w.PAWN && y === 7) {
-        newPosition[to] = p.w.QUEEN;
-      } else if (piece === p.b.PAWN && y === 0) {
-        newPosition[to] = p.b.QUEEN;
-      }
-      /** COPIED section. TODO make it reusable */
-
+  const evaluated = possiblePositions
+    .map((newPosition) => {
       const evaluation = evaluate(newPosition);
-
       return {
         evaluation,
-        from,
-        to,
+        position: newPosition,
       };
     })
     .reduce((prev, curr) => {
@@ -61,5 +44,5 @@ export function getMoveWithBestImmediateEvaluation(position, isWhitesTurn) {
 
   if (!evaluated) throw new Error("evaluated is undefined");
 
-  return { from: evaluated.from, to: evaluated.to };
+  return evaluated.position;
 }
