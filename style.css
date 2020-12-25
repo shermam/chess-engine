@@ -19,16 +19,26 @@ body {
 .square {
   height: 200px;
   width: 200px;
-  font-size: 200px;
+  font-size: 230px;
   display: flex;
   align-items: center;
   justify-content: center;
+  -webkit-text-stroke-color: black;
+  -webkit-text-stroke-width: 3px;
 }
 
 .square.dark {
-  background-color: #827f7f;
+  background-color: #817865;
 }
 
 .square.light {
-  background-color: #94ed94;
+  background-color: #c5bda7;
+}
+
+.white {
+  color: white;
+}
+
+.black {
+  color: black;
 }
