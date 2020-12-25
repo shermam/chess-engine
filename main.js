@@ -32,6 +32,8 @@ function move({ from, to }) {
 
   // Handle promotion
   // For now I am always promoting to queen
+  // TODO (@shermam) Add a mechanism to allow
+  // promotion to other types of pieces
   const y = (to / 8) | 0;
   if (piece === p.w.PAWN && y === 7) {
     position[to] = p.w.QUEEN;
