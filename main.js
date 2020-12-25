@@ -32,4 +32,10 @@ function move({ from, to }) {
   render(position, container);
   possibleMoves = getAvailableMoves(isWhitesTurn, position);
   console.log(evaluate(position) / 3);
+
+  if (!isWhitesTurn) {
+    const randomMove = (Math.random() * possibleMoves.length) | 0;
+    const [f, t] = possibleMoves[randomMove] ?? [0, 0];
+    move({ from: f, to: t });
+  }
 }
