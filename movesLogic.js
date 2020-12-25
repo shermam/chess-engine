@@ -74,6 +74,8 @@ const isEnemy = (isWhite, dest = EMPTY) =>
   isWhite ? dest < EMPTY : dest > EMPTY;
 
 /**
+ * TODO: (@shermam) I am not handling en passant yet
+ *
  * @param index {number}
  * @param position {Int8Array}
  * @returns {[number, number][]}
@@ -275,6 +277,8 @@ export function getQueenMoves(index, position) {
 }
 
 /**
+ * TODO: (@shermam) I am not handling castle yet
+ *
  * @param index {number}
  * @param position {Int8Array}
  * @returns {[number, number][]}
