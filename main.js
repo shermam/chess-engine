@@ -1,4 +1,4 @@
-import { initialPosition, EMPTY } from "./board.js";
+import { initialPosition, EMPTY, p } from "./board.js";
 import { createContainer } from "./container.js";
 import { getAvailableMoves } from "./movesLogic.js";
 import { render } from "./renderer.js";
@@ -29,9 +29,19 @@ function move({ from, to }) {
 
   position[to] = piece;
   position[from] = EMPTY;
+
+  // Handle promotion
+  // For now I am always promoting to queen
+  const y = (to / 8) | 0;
+  if (piece === p.w.PAWN && y === 7) {
+    position[to] = p.w.QUEEN;
+  } else if (piece === p.b.PAWN && y === 0) {
+    position[to] = p.b.QUEEN;
+  }
+
   render(position, container);
   possibleMoves = getAvailableMoves(isWhitesTurn, position);
-  console.log(evaluate(position) / 3);
+  console.log(evaluate(position));
 
   if (!isWhitesTurn) {
     const randomMove = (Math.random() * possibleMoves.length) | 0;
