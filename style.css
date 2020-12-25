@@ -4,6 +4,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #595959;
+}
+
+#container {
+  box-shadow: rgb(0 0 0 / 35%) 2px 13px 20px 20px;
 }
 
 .board {
