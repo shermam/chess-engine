@@ -1,3 +1,7 @@
+import { EMPTY } from "./board.js";
+
+export const whitePerspective = true;
+
 export const pieceMap = new Map([
   [3, "♟︎"],
   [15, "♜"],
@@ -22,7 +26,7 @@ export const pieceMap = new Map([
 export const createSquare = (piece, index) => {
   const square = document.createElement("div");
   square.classList.add("square");
-  square.classList.add(((index / 8) | 0) % 2 ^ index % 2 ? "dark" : "light");
+  square.classList.add(((index / 8) | 0) % 2 ^ index % 2 ? "light" : "dark");
   piece && square.classList.add(piece > 0 ? "white" : "black");
   square.setAttribute("index", index.toString());
   square.innerText = pieceMap.get(piece) ?? "";
@@ -39,9 +43,15 @@ export const render = (position, container) => {
   const board = document.createElement("div");
   board.classList.add("board");
 
-  position.forEach((piece, index) =>
-    board.appendChild(createSquare(piece, index))
-  );
+  if (whitePerspective) {
+    for (let index = position.length - 1; index >= 0; index--) {
+      board.appendChild(createSquare(position[index] ?? EMPTY, index));
+    }
+  } else {
+    for (let index = 0; index < position.length; index++) {
+      board.appendChild(createSquare(position[index] ?? EMPTY, index));
+    }
+  }
 
   container.appendChild(board);
 };
