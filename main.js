@@ -1,6 +1,6 @@
 import { initialPosition } from "./board.js";
 import { createContainer } from "./container.js";
-import { getMoveWithBestImmediateEvaluation } from "./engine.js";
+import { getMoveWithBestImmediateEvaluation, getRandomMove } from "./engine.js";
 import { generateNewPosition, getAvailableMoves } from "./movesLogic.js";
 import { render } from "./renderer.js";
 
@@ -24,7 +24,8 @@ function move({ from, to }) {
   // For now I am forcing the computer to make a move
   // on black's turn
   if (!isWhitesTurn) {
-    position.set(getMoveWithBestImmediateEvaluation(position, isWhitesTurn));
+    // position.set(getMoveWithBestImmediateEvaluation(position, isWhitesTurn));
+    position.set(getRandomMove(position, isWhitesTurn));
     refreshScreen();
   }
 }

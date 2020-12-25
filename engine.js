@@ -1,4 +1,4 @@
-import { getAvailableMoves, getAvailablePositions } from "./movesLogic.js";
+import { getAvailablePositions } from "./movesLogic.js";
 
 /**
  * @param position {Int8Array}
@@ -10,10 +10,13 @@ const evaluate = (position) => position.reduce((p, c) => p + c);
  * @param isWhitesTurn {boolean}
  */
 export function getRandomMove(position, isWhitesTurn) {
-  const possibleMoves = getAvailableMoves(isWhitesTurn, position);
-  const randomMove = (Math.random() * possibleMoves.length) | 0;
-  const [from, to] = possibleMoves[randomMove] ?? [0, 0];
-  return { from, to };
+  const possiblePositions = getAvailablePositions(isWhitesTurn, position);
+  const randomPosition = (Math.random() * possiblePositions.length) | 0;
+  const newPosition = possiblePositions[randomPosition];
+
+  if (!newPosition) throw new Error("Invalid position picked");
+
+  return newPosition;
 }
 
 /**
