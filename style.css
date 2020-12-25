@@ -21,7 +21,8 @@ body {
 .board {
   display: flex;
   flex-wrap: wrap;
-  background-color: red;
+  background-image: url(board.svg);
+  background-size: cover;
   width: 1600px;
   height: 1600px;
   cursor: pointer;
@@ -38,14 +39,6 @@ body {
   justify-content: center;
   -webkit-text-stroke-color: black;
   -webkit-text-stroke-width: 3px;
-}
-
-.square.dark {
-  background-color: #817865;
-}
-
-.square.light {
-  background-color: #c5bda7;
 }
 
 .white {

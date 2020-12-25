@@ -26,7 +26,6 @@ export const pieceMap = new Map([
 export const createSquare = (piece, index) => {
   const square = document.createElement("div");
   square.classList.add("square");
-  square.classList.add(((index / 8) | 0) % 2 ^ index % 2 ? "light" : "dark");
   piece && square.classList.add(piece > 0 ? "white" : "black");
   square.setAttribute("index", index.toString());
   square.innerText = pieceMap.get(piece) ?? "";
