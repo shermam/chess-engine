@@ -1,12 +1,8 @@
 import { initialPosition, EMPTY, p } from "./board.js";
 import { createContainer } from "./container.js";
+import { getMoveWithBestImmediateEvaluation, getRandomMove } from "./engine.js";
 import { getAvailableMoves } from "./movesLogic.js";
 import { render } from "./renderer.js";
-
-/**
- * @param position {Int8Array}
- */
-const evaluate = (position) => position.reduce((p, c) => p + c);
 
 const position = initialPosition;
 let isWhitesTurn = true;
@@ -43,11 +39,9 @@ function move({ from, to }) {
 
   render(position, container);
   possibleMoves = getAvailableMoves(isWhitesTurn, position);
-  console.log(evaluate(position));
 
   if (!isWhitesTurn) {
-    const randomMove = (Math.random() * possibleMoves.length) | 0;
-    const [f, t] = possibleMoves[randomMove] ?? [0, 0];
-    move({ from: f, to: t });
+    // move(getRandomMove(position, isWhitesTurn));
+    move(getMoveWithBestImmediateEvaluation(position, isWhitesTurn));
   }
 }
