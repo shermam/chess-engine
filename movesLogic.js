@@ -101,15 +101,21 @@ export function getPawnMoves(index, position) {
     }
   }
 
-  // if there is an enemy piece to diagonally left of the pawn
+  // if there is an enemy piece diagonally left of the pawn
   // the pawn can capture it
-  if (x > 0 && isEnemy(isWhite, addOrSub(isWhite, index, isWhite ? 7 : 9))) {
+  if (
+    x > 0 &&
+    isEnemy(isWhite, position[addOrSub(isWhite, index, isWhite ? 7 : 9)])
+  ) {
     possibleMoves.push([index, addOrSub(isWhite, index, isWhite ? 7 : 9)]);
   }
 
   //  similarly, if there is an enemy piece diagonally right
   // the pawn can also capture it
-  if (x < 7 && isEnemy(isWhite, addOrSub(isWhite, index, isWhite ? 9 : 7))) {
+  if (
+    x < 7 &&
+    isEnemy(isWhite, position[addOrSub(isWhite, index, isWhite ? 9 : 7)])
+  ) {
     possibleMoves.push([index, addOrSub(isWhite, index, isWhite ? 9 : 7)]);
   }
 
