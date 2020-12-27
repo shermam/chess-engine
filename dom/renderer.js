@@ -1,4 +1,4 @@
-import { EMPTY } from "./board.js";
+import { EMPTY } from "../js/board.js";
 
 export const whitePerspective = true;
 

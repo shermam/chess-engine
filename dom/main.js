@@ -1,7 +1,7 @@
-import { initialPosition } from "./board.js";
+import { initialPosition } from "../js/board.js";
 import { createContainer } from "./container.js";
-import { getMoveWithBestImmediateEvaluation, getRandomMove } from "./engine.js";
-import { generateNewPosition, getAvailableMoves } from "./movesLogic.js";
+import { getComputerMove } from "../js/engineWorker.js";
+import { generateNewPosition, getAvailableMoves } from "../js/movesLogic.js";
 import { render } from "./renderer.js";
 
 const position = initialPosition;
@@ -15,7 +15,7 @@ render(position, container);
 /**
  * @param param {{from: number, to: number}}
  */
-function move({ from, to }) {
+async function move({ from, to }) {
   if (!possibleMoves.find(([f, t]) => f === from && t === to)) return;
 
   position.set(generateNewPosition(position)([from, to]));
@@ -24,8 +24,9 @@ function move({ from, to }) {
   // For now I am forcing the computer to make a move
   // on black's turn
   if (!isWhitesTurn) {
-    // position.set(getMoveWithBestImmediateEvaluation(position, isWhitesTurn));
-    position.set(getRandomMove(position, isWhitesTurn));
+    const newPosition = await getComputerMove(position, isWhitesTurn);
+    position.set(newPosition);
+    // position.set(getRandomMove(position, isWhitesTurn));
     refreshScreen();
   }
 }

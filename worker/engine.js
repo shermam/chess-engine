@@ -1,4 +1,14 @@
-import { getAvailablePositions } from "./movesLogic.js";
+import { getAvailablePositions } from "../js/movesLogic.js";
+
+self.addEventListener("message", (
+  /** @type {MessageEvent<{position: Int8Array, isWhitesTurn: boolean}>} */ e
+) => {
+  const newPosition = getMoveWithBestImmediateEvaluation(
+    e.data.position,
+    e.data.isWhitesTurn
+  );
+  postMessage({ position: newPosition });
+});
 
 /**
  * @param position {Int8Array}
