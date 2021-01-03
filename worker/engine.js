@@ -14,7 +14,13 @@ self.addEventListener("message", (
 /**
  * @param position {Int8Array}
  */
-const evaluate = (position) => position.reduce((p, c) => p + c);
+const evaluate = (position) => {
+  let evaluation = 0;
+  for (var i = 0; i < position.length; i++) {
+    evaluation += position[i] ?? 0;
+  }
+  return evaluation;
+};
 
 /**
  * @param position {Int8Array}
