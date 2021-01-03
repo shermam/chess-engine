@@ -2,6 +2,8 @@
 
 [Click here](https://shermam.github.io/chess-engine/index.html) to see it at work.
 
+**WARNING** This engine does not handle en pasant and castle yet. Also checks and checkmates are not handle directly.
+
 This is an attempt to implement a chess engine in JS.
 The idea is to get a better understanding of the minimax algorithm and practice optimization of
 long running tasks.
