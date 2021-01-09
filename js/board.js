@@ -18,9 +18,6 @@ export const p = {
   },
 };
 
-export const WHITE_PIECES = new Set(Object.values(p.w));
-export const BLACK_PIECES = new Set(Object.values(p.b));
-
 export const initialPosition = new Int8Array([
   // Row 1
   p.w.ROOK,
@@ -41,7 +38,6 @@ export const initialPosition = new Int8Array([
   p.w.PAWN,
   p.w.PAWN,
   p.w.PAWN,
-  
 
   // Row 3
   EMPTY,

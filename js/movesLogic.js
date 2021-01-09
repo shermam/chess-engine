@@ -1,4 +1,4 @@
-import { BLACK_PIECES, EMPTY, p, WHITE_PIECES } from "./board.js";
+import { EMPTY, p } from "./board.js";
 
 /**
  * @param whitesTurn {boolean}
@@ -12,8 +12,8 @@ export function getAvailableMoves(whitesTurn, position) {
   for (let i = 0; i < position.length; i++) {
     const piece = position[i];
     if (!piece) continue;
-    if (whitesTurn && BLACK_PIECES.has(piece)) continue;
-    if (!whitesTurn && WHITE_PIECES.has(piece)) continue;
+    if (whitesTurn && piece < 0) continue;
+    if (!whitesTurn && piece > 0) continue;
 
     switch (piece) {
       case p.w.PAWN:
