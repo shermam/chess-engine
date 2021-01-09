@@ -27,7 +27,9 @@ const evaluate = (position) => {
  * @param isWhitesTurn {boolean}
  */
 export function getRandomMove(position, isWhitesTurn) {
-  const possiblePositions = getAvailablePositions(isWhitesTurn, position);
+  const possiblePositions = Array.from(
+    getAvailablePositions(isWhitesTurn, position)
+  );
   const randomPosition = (Math.random() * possiblePositions.length) | 0;
   const newPosition = possiblePositions[randomPosition];
 
@@ -41,7 +43,9 @@ export function getRandomMove(position, isWhitesTurn) {
  * @param isWhitesTurn {boolean}
  */
 export function getMoveWithBestImmediateEvaluation(position, isWhitesTurn) {
-  const possiblePositions = getAvailablePositions(isWhitesTurn, position);
+  const possiblePositions = Array.from(
+    getAvailablePositions(isWhitesTurn, position)
+  );
 
   if (!possiblePositions.length) throw new Error("GAME OVER");
 
@@ -80,19 +84,24 @@ let count = 0;
  * @param depth {number}
  */
 export function getBestMoveWithDepth(position, isWhitesTurn, depth) {
-  const possiblePositions = getAvailablePositions(isWhitesTurn, position);
-  const evaluated = possiblePositions.map((pos) => ({
-    position: pos,
-    evaluation: recursiveEvaluation(pos, !isWhitesTurn, depth, 0),
-  }));
+  /** @type {Int8Array | null} */
+  let newPosition = null;
+  let currentEval = isWhitesTurn ? -Infinity : +Infinity;
+  for (const pos of getAvailablePositions(isWhitesTurn, position)) {
+    const evaluation = recursiveEvaluation(pos, !isWhitesTurn, depth, 0);
+    if (
+      (isWhitesTurn && evaluation > currentEval) ||
+      (!isWhitesTurn && evaluation < currentEval)
+    ) {
+      newPosition = pos;
+      currentEval = evaluation;
+    }
+  }
 
-  if (!evaluated.length) throw new Error("GAME OVER!");
+  if (newPosition === null) throw new Error("GAME OVER!");
+  console.log({ count, currentEval });
 
-  const newPosition = minMaxPos(evaluated, isWhitesTurn);
-
-  console.log({ count, eval: newPosition.evaluation });
-
-  return newPosition.position;
+  return newPosition;
 }
 
 /**
@@ -104,25 +113,28 @@ export function getBestMoveWithDepth(position, isWhitesTurn, depth) {
  */
 export function recursiveEvaluation(position, isWhitesTurn, depth, level) {
   count++;
-  const possiblePositions = getAvailablePositions(isWhitesTurn, position);
-
-  if (!possiblePositions.length) {
-    return evaluate(position);
-  }
-
+  let currentEval = isWhitesTurn ? -Infinity : +Infinity;
   if (level < depth) {
-    return minMax(
-      possiblePositions.map((pos) =>
-        recursiveEvaluation(pos, !isWhitesTurn, depth, level + 1)
-      ),
-      isWhitesTurn
-    );
+    for (const pos of getAvailablePositions(isWhitesTurn, position)) {
+      const evaluation = recursiveEvaluation(
+        pos,
+        !isWhitesTurn,
+        depth,
+        level + 1
+      );
+      currentEval = minMax([currentEval, evaluation], isWhitesTurn);
+    }
+  } else {
+    for (const pos of getAvailablePositions(isWhitesTurn, position)) {
+      const evaluation = evaluate(pos);
+      currentEval = minMax([currentEval, evaluation], isWhitesTurn);
+    }
   }
 
-  return minMax(
-    possiblePositions.map((pos) => evaluate(pos)),
-    isWhitesTurn
-  );
+  if (currentEval === -Infinity || currentEval === +Infinity)
+    currentEval = evaluate(position);
+
+  return currentEval;
 }
 
 /**
@@ -132,24 +144,4 @@ export function recursiveEvaluation(position, isWhitesTurn, depth, level) {
 function minMax(evaluations, isWhitesTurn) {
   const fn = isWhitesTurn ? Math.max : Math.min;
   return fn(...evaluations);
-}
-
-/**
- * @param evaluations {{evaluation: number, position: Int8Array}[]}
- * @param isWhitesTurn {boolean}
- */
-function minMaxPos(evaluations, isWhitesTurn) {
-  return evaluations.reduce((prev, curr) => {
-    if (isWhitesTurn) {
-      if (prev.evaluation > curr.evaluation) {
-        return prev;
-      }
-      return curr;
-    } else {
-      if (prev.evaluation < curr.evaluation) {
-        return prev;
-      }
-      return curr;
-    }
-  });
 }

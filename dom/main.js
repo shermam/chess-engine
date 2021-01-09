@@ -26,7 +26,20 @@ render(position, container);
  * @param param {{from: number, to: number}}
  */
 async function move({ from, to }) {
-  if (!possibleMoves.find(([f, t]) => f === from && t === to)) return;
+  // if (!possibleMoves.find(([f, t]) => f === from && t === to)) return;
+  let found = false;
+  for (const [f, t] of possibleMoves) {
+    if (f === from && t === to) {
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) {
+    console.log("move not found");
+
+    return;
+  }
 
   position.set(generateNewPosition(position)([from, to]));
   refreshScreen();

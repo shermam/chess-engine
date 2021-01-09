@@ -3,12 +3,9 @@ import { EMPTY, p } from "./board.js";
 /**
  * @param whitesTurn {boolean}
  * @param position {Int8Array}
- * @returns {[number,number][]}
+ * @returns {Generator<[number,number]>}
  */
-export function getAvailableMoves(whitesTurn, position) {
-  /** @type {[number, number][]} */
-  const availableMoves = [];
-
+export function* getAvailableMoves(whitesTurn, position) {
   for (let i = 0; i < position.length; i++) {
     const piece = position[i];
     if (!piece) continue;
@@ -18,38 +15,36 @@ export function getAvailableMoves(whitesTurn, position) {
     switch (piece) {
       case p.w.PAWN:
       case p.b.PAWN: {
-        availableMoves.push(...getPawnMoves(i, position, whitesTurn));
+        yield* getPawnMoves(i, position, whitesTurn);
         break;
       }
       case p.w.ROOK:
       case p.b.ROOK: {
-        availableMoves.push(...getRookMoves(i, position, whitesTurn));
+        yield* getRookMoves(i, position, whitesTurn);
         break;
       }
       case p.w.KNIGHT:
       case p.b.KNIGHT: {
-        availableMoves.push(...getKnightMoves(i, position, whitesTurn));
+        yield* getKnightMoves(i, position, whitesTurn);
         break;
       }
       case p.w.BISHOP:
       case p.b.BISHOP: {
-        availableMoves.push(...getBishopMoves(i, position, whitesTurn));
+        yield* getBishopMoves(i, position, whitesTurn);
         break;
       }
       case p.w.QUEEN:
       case p.b.QUEEN: {
-        availableMoves.push(...getQueenMoves(i, position, whitesTurn));
+        yield* getQueenMoves(i, position, whitesTurn);
         break;
       }
       case p.w.KING:
       case p.b.KING: {
-        availableMoves.push(...getKingMoves(i, position, whitesTurn));
+        yield* getKingMoves(i, position, whitesTurn);
         break;
       }
     }
   }
-
-  return availableMoves;
 }
 
 /**
@@ -434,11 +429,12 @@ export function* getKnightMoves(index, position, isWhite) {
 /**
  * @param whitesTurn {boolean}
  * @param position {Int8Array}
- * @returns {Int8Array[]}
+ * @returns {Generator<Int8Array>}
  */
-export function getAvailablePositions(whitesTurn, position) {
-  const possibleMoves = getAvailableMoves(whitesTurn, position);
-  return possibleMoves.map(generateNewPosition(position));
+export function* getAvailablePositions(whitesTurn, position) {
+  for (const move of getAvailableMoves(whitesTurn, position)) {
+    yield generateNewPosition(position)(move);
+  }
 }
 
 /**
