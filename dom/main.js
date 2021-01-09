@@ -38,7 +38,6 @@ async function move({ from, to }) {
     const newPosition = await getComputerMove(position, isWhitesTurn);
     console.timeEnd("move");
     position.set(newPosition);
-    // position.set(getRandomMove(position, isWhitesTurn));
     refreshScreen();
   }
 }
