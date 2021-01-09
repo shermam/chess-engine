@@ -73,19 +73,16 @@ const isEnemy = (isWhite, dest = EMPTY) =>
  * @param index {number}
  * @param position {Int8Array}
  * @param isWhite {boolean}
- * @returns {[number, number][]}
+ * @returns {Generator<[number, number]>}
  */
-export function getPawnMoves(index, position, isWhite) {
-  /** @type {[number, number][]} */
-  const possibleMoves = [];
-
+export function* getPawnMoves(index, position, isWhite) {
   const x = index % 8;
   const y = (index / 8) | 0;
 
   // When the square in front of the pawn is empty...
   if (position[addOrSub(isWhite, index, 8)] === EMPTY) {
     // ... the pawn can move forward one square
-    possibleMoves.push([index, addOrSub(isWhite, index, 8)]);
+    yield [index, addOrSub(isWhite, index, 8)];
 
     const originalRow = isWhite ? 1 : 6;
 
@@ -93,7 +90,7 @@ export function getPawnMoves(index, position, isWhite) {
     // and the two squares in front it are empty
     // the pawn can move two squares
     if (y === originalRow && position[addOrSub(isWhite, index, 16)] === EMPTY) {
-      possibleMoves.push([index, addOrSub(isWhite, index, 16)]);
+      yield [index, addOrSub(isWhite, index, 16)];
     }
   }
 
@@ -103,7 +100,7 @@ export function getPawnMoves(index, position, isWhite) {
     x > 0 &&
     isEnemy(isWhite, position[addOrSub(isWhite, index, isWhite ? 7 : 9)])
   ) {
-    possibleMoves.push([index, addOrSub(isWhite, index, isWhite ? 7 : 9)]);
+    yield [index, addOrSub(isWhite, index, isWhite ? 7 : 9)];
   }
 
   //  similarly, if there is an enemy piece diagonally right
@@ -112,22 +109,17 @@ export function getPawnMoves(index, position, isWhite) {
     x < 7 &&
     isEnemy(isWhite, position[addOrSub(isWhite, index, isWhite ? 9 : 7)])
   ) {
-    possibleMoves.push([index, addOrSub(isWhite, index, isWhite ? 9 : 7)]);
+    yield [index, addOrSub(isWhite, index, isWhite ? 9 : 7)];
   }
-
-  return possibleMoves;
 }
 
 /**
  * @param index {number}
  * @param position {Int8Array}
  * @param isWhite {boolean}
- * @returns {[number, number][]}
+ * @returns {Generator<[number, number]>}
  */
-export function getRookMoves(index, position, isWhite) {
-  /** @type {[number, number][]} */
-  const possibleMoves = [];
-
+export function* getRookMoves(index, position, isWhite) {
   const x = index % 8;
 
   // The rook can move horizontally to the
@@ -135,9 +127,9 @@ export function getRookMoves(index, position, isWhite) {
   for (let i = 1; i < 8 - x; i++) {
     const dest = index + i;
     if (position[dest] === EMPTY) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
     } else if (isEnemy(isWhite, position[dest])) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
       break;
     } else {
       break;
@@ -149,9 +141,9 @@ export function getRookMoves(index, position, isWhite) {
   for (let i = -1; i >= -x; i--) {
     const dest = index + i;
     if (position[dest] === EMPTY) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
     } else if (isEnemy(isWhite, position[dest])) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
       break;
     } else {
       break;
@@ -163,9 +155,9 @@ export function getRookMoves(index, position, isWhite) {
   for (let i = index + 8; i < 64; i += 8) {
     const dest = i;
     if (position[dest] === EMPTY) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
     } else if (isEnemy(isWhite, position[dest])) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
       break;
     } else {
       break;
@@ -177,28 +169,23 @@ export function getRookMoves(index, position, isWhite) {
   for (let i = index - 8; i >= 0; i -= 8) {
     const dest = i;
     if (position[dest] === EMPTY) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
     } else if (isEnemy(isWhite, position[dest])) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
       break;
     } else {
       break;
     }
   }
-
-  return possibleMoves;
 }
 
 /**
  * @param index {number}
  * @param position {Int8Array}
  * @param isWhite {boolean}
- * @returns {[number, number][]}
+ * @returns {Generator<[number, number]>}
  */
-export function getBishopMoves(index, position, isWhite) {
-  /** @type {[number, number][]} */
-  const possibleMoves = [];
-
+export function* getBishopMoves(index, position, isWhite) {
   const x = index % 8;
 
   // The bishop can move diagonally up
@@ -206,9 +193,9 @@ export function getBishopMoves(index, position, isWhite) {
   for (let i = 1, j = 8; i < 8 - x && j < 64 - index; i++, j += 8) {
     const dest = index + i + j;
     if (position[dest] === EMPTY) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
     } else if (isEnemy(isWhite, position[dest])) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
       break;
     } else {
       break;
@@ -220,9 +207,9 @@ export function getBishopMoves(index, position, isWhite) {
   for (let i = -1, j = 8; i >= -x && j < 64 - index; i--, j += 8) {
     const dest = index + i + j;
     if (position[dest] === EMPTY) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
     } else if (isEnemy(isWhite, position[dest])) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
       break;
     } else {
       break;
@@ -234,9 +221,9 @@ export function getBishopMoves(index, position, isWhite) {
   for (let i = 1, j = -8; i < 8 - x && j >= -index; i++, j -= 8) {
     const dest = index + i + j;
     if (position[dest] === EMPTY) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
     } else if (isEnemy(isWhite, position[dest])) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
       break;
     } else {
       break;
@@ -248,30 +235,26 @@ export function getBishopMoves(index, position, isWhite) {
   for (let i = -1, j = -8; i >= -x && j >= -index; i--, j -= 8) {
     const dest = index + i + j;
     if (position[dest] === EMPTY) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
     } else if (isEnemy(isWhite, position[dest])) {
-      possibleMoves.push([index, dest]);
+      yield [index, dest];
       break;
     } else {
       break;
     }
   }
-
-  return possibleMoves;
 }
 
 /**
  * @param index {number}
  * @param position {Int8Array}
  * @param isWhite {boolean}
- * @returns {[number, number][]}
+ * @returns {Generator<[number, number]>}
  */
-export function getQueenMoves(index, position, isWhite) {
+export function* getQueenMoves(index, position, isWhite) {
   // The queen can move like a rook and bishop
-  return [
-    ...getRookMoves(index, position, isWhite),
-    ...getBishopMoves(index, position, isWhite),
-  ];
+  yield* getRookMoves(index, position, isWhite);
+  yield* getBishopMoves(index, position, isWhite);
 }
 
 /**
@@ -280,12 +263,9 @@ export function getQueenMoves(index, position, isWhite) {
  * @param index {number}
  * @param position {Int8Array}
  * @param isWhite {boolean}
- * @returns {[number, number][]}
+ * @returns {Generator<[number, number]>}
  */
-export function getKingMoves(index, position, isWhite) {
-  /** @type {[number, number][]} */
-  const possibleMoves = [];
-
+export function* getKingMoves(index, position, isWhite) {
   const x = index % 8;
 
   // A King can move one square up
@@ -293,7 +273,7 @@ export function getKingMoves(index, position, isWhite) {
     index + 8 < 64 &&
     (position[index + 8] === EMPTY || isEnemy(isWhite, position[index + 8]))
   ) {
-    possibleMoves.push([index, index + 8]);
+    yield [index, index + 8];
   }
 
   // A King can move one square down
@@ -301,7 +281,7 @@ export function getKingMoves(index, position, isWhite) {
     index - 8 >= 0 &&
     (position[index - 8] === EMPTY || isEnemy(isWhite, position[index - 8]))
   ) {
-    possibleMoves.push([index, index - 8]);
+    yield [index, index - 8];
   }
 
   // A King can move one square to the right
@@ -309,7 +289,7 @@ export function getKingMoves(index, position, isWhite) {
     x < 7 &&
     (position[index + 1] === EMPTY || isEnemy(isWhite, position[index + 1]))
   ) {
-    possibleMoves.push([index, index + 1]);
+    yield [index, index + 1];
   }
 
   // A King can move one square to the left
@@ -317,7 +297,7 @@ export function getKingMoves(index, position, isWhite) {
     x >= 1 &&
     (position[index - 1] === EMPTY || isEnemy(isWhite, position[index - 1]))
   ) {
-    possibleMoves.push([index, index - 1]);
+    yield [index, index - 1];
   }
 
   // A King can move one square diagonally up and right
@@ -327,7 +307,7 @@ export function getKingMoves(index, position, isWhite) {
     (position[index + 1 + 8] === EMPTY ||
       isEnemy(isWhite, position[index + 1 + 8]))
   ) {
-    possibleMoves.push([index, index + 1 + 8]);
+    yield [index, index + 1 + 8];
   }
 
   // A King can move one square diagonally up and left
@@ -337,7 +317,7 @@ export function getKingMoves(index, position, isWhite) {
     (position[index - 1 + 8] === EMPTY ||
       isEnemy(isWhite, position[index - 1 + 8]))
   ) {
-    possibleMoves.push([index, index - 1 + 8]);
+    yield [index, index - 1 + 8];
   }
 
   // A King can move one square diagonally down and right
@@ -347,7 +327,7 @@ export function getKingMoves(index, position, isWhite) {
     (position[index - 8 + 1] === EMPTY ||
       isEnemy(isWhite, position[index - 8 + 1]))
   ) {
-    possibleMoves.push([index, index - 8 + 1]);
+    yield [index, index - 8 + 1];
   }
 
   // A King can move one square diagonally down and left
@@ -357,22 +337,17 @@ export function getKingMoves(index, position, isWhite) {
     (position[index - 8 - 1] === EMPTY ||
       isEnemy(isWhite, position[index - 8 - 1]))
   ) {
-    possibleMoves.push([index, index - 8 - 1]);
+    yield [index, index - 8 - 1];
   }
-
-  return possibleMoves;
 }
 
 /**
  * @param index {number}
  * @param position {Int8Array}
  * @param isWhite {boolean}
- * @returns {[number, number][]}
+ * @returns {Generator<[number, number]>}
  */
-export function getKnightMoves(index, position, isWhite) {
-  /** @type {[number, number][]} */
-  const possibleMoves = [];
-
+export function* getKnightMoves(index, position, isWhite) {
   const x = index % 8;
 
   // A Knight can move two squares up and one right
@@ -382,7 +357,7 @@ export function getKnightMoves(index, position, isWhite) {
     (position[index + 16 + 1] === EMPTY ||
       isEnemy(isWhite, position[index + 16 + 1]))
   ) {
-    possibleMoves.push([index, index + 16 + 1]);
+    yield [index, index + 16 + 1];
   }
 
   // A Knight can move two squares up and one left
@@ -392,7 +367,7 @@ export function getKnightMoves(index, position, isWhite) {
     (position[index + 16 - 1] === EMPTY ||
       isEnemy(isWhite, position[index + 16 - 1]))
   ) {
-    possibleMoves.push([index, index + 16 - 1]);
+    yield [index, index + 16 - 1];
   }
 
   // A Knight can move one square up and two right
@@ -402,7 +377,7 @@ export function getKnightMoves(index, position, isWhite) {
     (position[index + 8 + 2] === EMPTY ||
       isEnemy(isWhite, position[index + 8 + 2]))
   ) {
-    possibleMoves.push([index, index + 8 + 2]);
+    yield [index, index + 8 + 2];
   }
 
   // A Knight can move one square up and two left
@@ -412,7 +387,7 @@ export function getKnightMoves(index, position, isWhite) {
     (position[index + 8 - 2] === EMPTY ||
       isEnemy(isWhite, position[index + 8 - 2]))
   ) {
-    possibleMoves.push([index, index + 8 - 2]);
+    yield [index, index + 8 - 2];
   }
 
   // A Knight can move two squares down and one right
@@ -422,7 +397,7 @@ export function getKnightMoves(index, position, isWhite) {
     (position[index - 16 + 1] === EMPTY ||
       isEnemy(isWhite, position[index - 16 + 1]))
   ) {
-    possibleMoves.push([index, index - 16 + 1]);
+    yield [index, index - 16 + 1];
   }
 
   // A Knight can move two squares down and one left
@@ -432,7 +407,7 @@ export function getKnightMoves(index, position, isWhite) {
     (position[index - 16 - 1] === EMPTY ||
       isEnemy(isWhite, position[index - 16 - 1]))
   ) {
-    possibleMoves.push([index, index - 16 - 1]);
+    yield [index, index - 16 - 1];
   }
 
   // A Knight can move one square down and two right
@@ -442,7 +417,7 @@ export function getKnightMoves(index, position, isWhite) {
     (position[index - 8 + 2] === EMPTY ||
       isEnemy(isWhite, position[index - 8 + 2]))
   ) {
-    possibleMoves.push([index, index - 8 + 2]);
+    yield [index, index - 8 + 2];
   }
 
   // A Knight can move one square down and two left
@@ -452,10 +427,8 @@ export function getKnightMoves(index, position, isWhite) {
     (position[index - 8 - 2] === EMPTY ||
       isEnemy(isWhite, position[index - 8 - 2]))
   ) {
-    possibleMoves.push([index, index - 8 - 2]);
+    yield [index, index - 8 - 2];
   }
-
-  return possibleMoves;
 }
 
 /**
