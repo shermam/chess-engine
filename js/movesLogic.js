@@ -18,38 +18,32 @@ export function getAvailableMoves(whitesTurn, position) {
     switch (piece) {
       case p.w.PAWN:
       case p.b.PAWN: {
-        const possibleMoves = getPawnMoves(i, position);
-        if (possibleMoves) availableMoves.push(...possibleMoves);
+        availableMoves.push(...getPawnMoves(i, position));
         break;
       }
       case p.w.ROOK:
       case p.b.ROOK: {
-        const possibleMoves = getRookMoves(i, position);
-        if (possibleMoves) availableMoves.push(...possibleMoves);
+        availableMoves.push(...getRookMoves(i, position));
         break;
       }
       case p.w.KNIGHT:
       case p.b.KNIGHT: {
-        const possibleMoves = getKnightMoves(i, position);
-        if (possibleMoves) availableMoves.push(...possibleMoves);
+        availableMoves.push(...getKnightMoves(i, position));
         break;
       }
       case p.w.BISHOP:
       case p.b.BISHOP: {
-        const possibleMoves = getBishopMoves(i, position);
-        if (possibleMoves) availableMoves.push(...possibleMoves);
+        availableMoves.push(...getBishopMoves(i, position));
         break;
       }
       case p.w.QUEEN:
       case p.b.QUEEN: {
-        const possibleMoves = getQueenMoves(i, position);
-        if (possibleMoves) availableMoves.push(...possibleMoves);
+        availableMoves.push(...getQueenMoves(i, position));
         break;
       }
       case p.w.KING:
       case p.b.KING: {
-        const possibleMoves = getKingMoves(i, position);
-        if (possibleMoves) availableMoves.push(...possibleMoves);
+        availableMoves.push(...getKingMoves(i, position));
         break;
       }
     }
