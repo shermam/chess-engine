@@ -18,32 +18,32 @@ export function getAvailableMoves(whitesTurn, position) {
     switch (piece) {
       case p.w.PAWN:
       case p.b.PAWN: {
-        availableMoves.push(...getPawnMoves(i, position));
+        availableMoves.push(...getPawnMoves(i, position, whitesTurn));
         break;
       }
       case p.w.ROOK:
       case p.b.ROOK: {
-        availableMoves.push(...getRookMoves(i, position));
+        availableMoves.push(...getRookMoves(i, position, whitesTurn));
         break;
       }
       case p.w.KNIGHT:
       case p.b.KNIGHT: {
-        availableMoves.push(...getKnightMoves(i, position));
+        availableMoves.push(...getKnightMoves(i, position, whitesTurn));
         break;
       }
       case p.w.BISHOP:
       case p.b.BISHOP: {
-        availableMoves.push(...getBishopMoves(i, position));
+        availableMoves.push(...getBishopMoves(i, position, whitesTurn));
         break;
       }
       case p.w.QUEEN:
       case p.b.QUEEN: {
-        availableMoves.push(...getQueenMoves(i, position));
+        availableMoves.push(...getQueenMoves(i, position, whitesTurn));
         break;
       }
       case p.w.KING:
       case p.b.KING: {
-        availableMoves.push(...getKingMoves(i, position));
+        availableMoves.push(...getKingMoves(i, position, whitesTurn));
         break;
       }
     }
@@ -72,12 +72,12 @@ const isEnemy = (isWhite, dest = EMPTY) =>
  *
  * @param index {number}
  * @param position {Int8Array}
+ * @param isWhite {boolean}
  * @returns {[number, number][]}
  */
-export function getPawnMoves(index, position) {
+export function getPawnMoves(index, position, isWhite) {
   /** @type {[number, number][]} */
   const possibleMoves = [];
-  const isWhite = (position[index] ?? EMPTY) > EMPTY;
 
   const x = index % 8;
   const y = (index / 8) | 0;
@@ -121,12 +121,12 @@ export function getPawnMoves(index, position) {
 /**
  * @param index {number}
  * @param position {Int8Array}
+ * @param isWhite {boolean}
  * @returns {[number, number][]}
  */
-export function getRookMoves(index, position) {
+export function getRookMoves(index, position, isWhite) {
   /** @type {[number, number][]} */
   const possibleMoves = [];
-  const isWhite = (position[index] ?? EMPTY) > EMPTY;
 
   const x = index % 8;
 
@@ -192,12 +192,12 @@ export function getRookMoves(index, position) {
 /**
  * @param index {number}
  * @param position {Int8Array}
+ * @param isWhite {boolean}
  * @returns {[number, number][]}
  */
-export function getBishopMoves(index, position) {
+export function getBishopMoves(index, position, isWhite) {
   /** @type {[number, number][]} */
   const possibleMoves = [];
-  const isWhite = (position[index] ?? EMPTY) > EMPTY;
 
   const x = index % 8;
 
@@ -263,11 +263,15 @@ export function getBishopMoves(index, position) {
 /**
  * @param index {number}
  * @param position {Int8Array}
+ * @param isWhite {boolean}
  * @returns {[number, number][]}
  */
-export function getQueenMoves(index, position) {
+export function getQueenMoves(index, position, isWhite) {
   // The queen can move like a rook and bishop
-  return [...getRookMoves(index, position), ...getBishopMoves(index, position)];
+  return [
+    ...getRookMoves(index, position, isWhite),
+    ...getBishopMoves(index, position, isWhite),
+  ];
 }
 
 /**
@@ -275,13 +279,13 @@ export function getQueenMoves(index, position) {
  *
  * @param index {number}
  * @param position {Int8Array}
+ * @param isWhite {boolean}
  * @returns {[number, number][]}
  */
-export function getKingMoves(index, position) {
+export function getKingMoves(index, position, isWhite) {
   /** @type {[number, number][]} */
   const possibleMoves = [];
 
-  const isWhite = (position[index] ?? EMPTY) > EMPTY;
   const x = index % 8;
 
   // A King can move one square up
@@ -362,13 +366,13 @@ export function getKingMoves(index, position) {
 /**
  * @param index {number}
  * @param position {Int8Array}
+ * @param isWhite {boolean}
  * @returns {[number, number][]}
  */
-export function getKnightMoves(index, position) {
+export function getKnightMoves(index, position, isWhite) {
   /** @type {[number, number][]} */
   const possibleMoves = [];
 
-  const isWhite = (position[index] ?? EMPTY) > EMPTY;
   const x = index % 8;
 
   // A Knight can move two squares up and one right

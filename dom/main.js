@@ -12,15 +12,15 @@ const container = createContainer(move);
 
 render(position, container);
 
-// TEMP: (@shermam) Make the computer play itself
-(async function go() {
-  console.time("move");
-  const newPosition = await getComputerMove(position, isWhitesTurn);
-  console.timeEnd("move");
-  position.set(newPosition);
-  refreshScreen();
-  go();
-})();
+// // TEMP: (@shermam) Make the computer play itself
+// (async function go() {
+//   console.time("move");
+//   const newPosition = await getComputerMove(position, isWhitesTurn);
+//   console.timeEnd("move");
+//   position.set(newPosition);
+//   refreshScreen();
+//   go();
+// })();
 
 /**
  * @param param {{from: number, to: number}}
