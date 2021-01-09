@@ -24,7 +24,9 @@ async function move({ from, to }) {
   // For now I am forcing the computer to make a move
   // on black's turn
   if (!isWhitesTurn) {
+    console.time("move");
     const newPosition = await getComputerMove(position, isWhitesTurn);
+    console.timeEnd("move");
     position.set(newPosition);
     // position.set(getRandomMove(position, isWhitesTurn));
     refreshScreen();
