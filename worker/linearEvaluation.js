@@ -11,13 +11,13 @@ import { minMax } from "./minMax.js";
  *   children: Generator<Int8Array>
  * }} Node
  */
+
 /**
  * @param position {Int8Array}
  * @param isWhitesTurn {boolean}
  * @param depth {number}
  * @returns {number}}
  */
-
 export function linearEvaluation(position, isWhitesTurn, depth) {
   /** @type {Node|undefined} */
   let currentPos = {
@@ -34,20 +34,23 @@ export function linearEvaluation(position, isWhitesTurn, depth) {
   let count = 0;
 
   while (currentPos) {
-    if (count++ > 10000000) throw new Error(`too many iterations ${count}`);
+    // This is just to prevent infinite loops for now
+    if (count++ > 10_000_000) throw new Error(`too many iterations ${count}`);
     if (currentPos.level < depth) {
       /** @type {IteratorResult<Int8Array>} */
       const child = currentPos.children.next();
       if (!child.done) {
         stack.push(currentPos);
+        /** @type {boolean} */
+        const turn = !currentPos.isWhitesTurn;
+
         currentPos = {
           position: child.value,
-          isWhitesTurn: !currentPos.isWhitesTurn,
+          isWhitesTurn: turn,
           level: currentPos.level + 1,
-          evaluation: !currentPos.isWhitesTurn ? -Infinity : +Infinity,
-          children: getAvailablePositions(isWhitesTurn, child.value),
+          evaluation: turn ? -Infinity : +Infinity,
+          children: getAvailablePositions(turn, child.value),
         };
-        continue;
       } else {
         const evaluation = currentPos.evaluation;
         currentPos = stack.pop();
@@ -56,7 +59,6 @@ export function linearEvaluation(position, isWhitesTurn, depth) {
           [evaluation, currentPos.evaluation],
           currentPos.isWhitesTurn
         );
-        continue;
       }
     } else {
       const evaluation = evaluate(currentPos.position);
@@ -67,7 +69,6 @@ export function linearEvaluation(position, isWhitesTurn, depth) {
         [evaluation, currentPos.evaluation],
         currentPos.isWhitesTurn
       );
-      continue;
     }
   }
 

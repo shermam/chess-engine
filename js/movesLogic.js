@@ -463,3 +463,13 @@ export const generateNewPosition = (position) => ([from, to]) => {
 
   return newPosition;
 };
+
+/**
+ * @param index {number}
+ */
+export const getCoordinate = (index) => {
+  const x = index % 8;
+  const y = (index / 8) | 0;
+  const file = String.fromCharCode(97 + x);
+  return `${file}${y + 1}`;
+};

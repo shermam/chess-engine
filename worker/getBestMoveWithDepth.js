@@ -38,16 +38,15 @@ export function getBestMoveWithDepthLinear(position, isWhitesTurn, depth) {
   let currentEval = isWhitesTurn ? -Infinity : +Infinity;
   for (const pos of getAvailablePositions(isWhitesTurn, position)) {
     const evaluation = linearEvaluation(pos, !isWhitesTurn, depth);
+
     if (
-      (isWhitesTurn && evaluation > currentEval) ||
-      (!isWhitesTurn && evaluation < currentEval)
+      (isWhitesTurn && evaluation >= currentEval) ||
+      (!isWhitesTurn && evaluation <= currentEval)
     ) {
       newPosition = pos;
       currentEval = evaluation;
     }
   }
-
-  console.log(currentEval);
 
   if (newPosition === null) throw new Error("GAME OVER!");
 

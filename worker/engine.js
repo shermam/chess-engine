@@ -6,7 +6,7 @@ self.addEventListener("message", (
   const newPosition = getBestMoveWithDepthLinear(
     e.data.position,
     e.data.isWhitesTurn,
-    3
+    4
   );
   postMessage({ position: newPosition });
 });
