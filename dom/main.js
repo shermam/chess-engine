@@ -6,7 +6,7 @@ import { render } from "./renderer.js";
 
 const position = initialPosition;
 let isWhitesTurn = true;
-let possibleMoves = getAvailableMoves(isWhitesTurn, position);
+let possibleMoves = Array.from(getAvailableMoves(isWhitesTurn, position));
 
 const container = createContainer(move);
 
@@ -26,20 +26,7 @@ render(position, container);
  * @param param {{from: number, to: number}}
  */
 async function move({ from, to }) {
-  // if (!possibleMoves.find(([f, t]) => f === from && t === to)) return;
-  let found = false;
-  for (const [f, t] of possibleMoves) {
-    if (f === from && t === to) {
-      found = true;
-      break;
-    }
-  }
-
-  if (!found) {
-    console.log("move not found");
-
-    return;
-  }
+  if (!possibleMoves.find(([f, t]) => f === from && t === to)) return;
 
   position.set(generateNewPosition(position)([from, to]));
   refreshScreen();
@@ -57,5 +44,5 @@ async function move({ from, to }) {
 function refreshScreen() {
   isWhitesTurn = !isWhitesTurn;
   render(position, container);
-  possibleMoves = getAvailableMoves(isWhitesTurn, position);
+  possibleMoves = Array.from(getAvailableMoves(isWhitesTurn, position));
 }
