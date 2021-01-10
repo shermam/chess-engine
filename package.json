@@ -1,0 +1,21 @@
+{
+  "name": "chess-engine",
+  "version": "1.0.0",
+  "description": "[Click here](https://shermam.github.io/chess-engine/index.html) to see it at work.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node worker/linearEvaluation.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shermam/chess-engine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shermam/chess-engine/issues"
+  },
+  "homepage": "https://github.com/shermam/chess-engine#readme"
+}
