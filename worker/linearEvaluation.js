@@ -13,19 +13,21 @@ import { minMax } from "./minMax.js";
  */
 
 /**
- * @param position {Int8Array}
- * @param isWhitesTurn {boolean}
- * @param depth {number}
- * @returns {number}}
+ * @param generateChildren {(whitesTurn: boolean, position: Int8Array) => Generator<Int8Array>}
+ * @returns {(position: Int8Array, isWhitesTurn: boolean, depth: number) => number}}
  */
-export function linearEvaluation(position, isWhitesTurn, depth) {
+export const injectableLinearEvaluation = (generateChildren) => (
+  position,
+  isWhitesTurn,
+  depth
+) => {
   /** @type {Node|undefined} */
   let currentPos = {
     position,
     isWhitesTurn,
     level: 0,
     evaluation: isWhitesTurn ? -Infinity : +Infinity,
-    children: getAvailablePositions(isWhitesTurn, position),
+    children: generateChildren(isWhitesTurn, position),
   };
 
   /** @type {Node[]}*/
@@ -49,7 +51,7 @@ export function linearEvaluation(position, isWhitesTurn, depth) {
           isWhitesTurn: turn,
           level: currentPos.level + 1,
           evaluation: turn ? -Infinity : +Infinity,
-          children: getAvailablePositions(turn, child.value),
+          children: generateChildren(turn, child.value),
         };
       } else {
         const evaluation = currentPos.evaluation;
@@ -75,4 +77,8 @@ export function linearEvaluation(position, isWhitesTurn, depth) {
   console.log("did not find a move");
 
   return 0;
-}
+};
+
+export const linearEvaluation = injectableLinearEvaluation(
+  getAvailablePositions
+);
