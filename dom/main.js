@@ -6,7 +6,7 @@ import { render } from "./renderer.js";
 
 const position = initialPosition;
 let isWhitesTurn = true;
-let possibleMoves = getAvailableMoves(isWhitesTurn, position);
+let possibleMoves = Array.from(getAvailableMoves(isWhitesTurn, position));
 
 const container = createContainer(move);
 
@@ -44,5 +44,5 @@ async function move({ from, to }) {
 function refreshScreen() {
   isWhitesTurn = !isWhitesTurn;
   render(position, container);
-  possibleMoves = getAvailableMoves(isWhitesTurn, position);
+  possibleMoves = Array.from(getAvailableMoves(isWhitesTurn, position));
 }
