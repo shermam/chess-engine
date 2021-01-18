@@ -44,9 +44,9 @@ function color(color, text) {
 export function it(description, callback) {
   try {
     callback();
-    console.log("  ", color("BgGreen", "Pass"), description);
+    console.log("  ", color("BgGreen", "Pass"), color("FgGreen", description));
   } catch (error) {
-    console.log("  ", color("BgRed", "Fail"), description);
+    console.log("  ", color("BgRed", "Fail"), color("FgRed", description));
     console.error(error);
     process.exitCode = 1;
   }
