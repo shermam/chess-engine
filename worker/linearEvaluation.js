@@ -61,20 +61,6 @@ export const injectableLinearEvaluation = (generateChildren) => (
           [evaluation, currentPos.evaluation],
           currentPos.isWhitesTurn
         );
-
-        // Check the stack one level higher
-        // to bail out if the opponent already
-        // has a better option then we do in the current
-        // branch
-        const prev = stack[stack.length - 1];
-        if (!prev) continue;
-        const value = minMax(
-          [currentPos.evaluation, prev.evaluation],
-          prev.isWhitesTurn
-        );
-        if (value === prev.evaluation) {
-          currentPos = stack.pop();
-        }
       }
     } else {
       const evaluation = evaluate(currentPos.position);
