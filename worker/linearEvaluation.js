@@ -9,6 +9,8 @@ import { minMax } from "./minMax.js";
  *   level: number,
  *   evaluation: number,
  *   children: Generator<Int8Array>
+ *   alpha: number,
+ *   beta: number,
  * }} Node
  */
 
@@ -28,6 +30,8 @@ export const injectableLinearEvaluation = (generateChildren) => (
     level: 0,
     evaluation: isWhitesTurn ? -Infinity : +Infinity,
     children: generateChildren(isWhitesTurn, position),
+    alpha: -Infinity,
+    beta: +Infinity,
   };
 
   /** @type {Node[]}*/
@@ -38,13 +42,22 @@ export const injectableLinearEvaluation = (generateChildren) => (
   while (currentPos) {
     // This is just to prevent infinite loops for now
     if (count++ > 10_000_000) throw new Error(`too many iterations ${count}`);
+
     if (currentPos.level < depth) {
       /** @type {IteratorResult<Int8Array>} */
       const child = currentPos.children.next();
       if (!child.done) {
         stack.push(currentPos);
+        // For some reason I am getting this strange TS error here
+        // 'beta' implicitly has type 'any' because it does not have
+        // a type annotation and is referenced directly or indirectly
+        // in its own initializer.ts(7022)
         /** @type {boolean} */
         const turn = !currentPos.isWhitesTurn;
+        /** @type {number} */
+        const alpha = currentPos.alpha;
+        /** @type {number} */
+        const beta = currentPos.beta;
 
         currentPos = {
           position: child.value,
@@ -52,9 +65,13 @@ export const injectableLinearEvaluation = (generateChildren) => (
           level: currentPos.level + 1,
           evaluation: turn ? -Infinity : +Infinity,
           children: generateChildren(turn, child.value),
+          alpha,
+          beta,
         };
       } else {
         const evaluation = currentPos.evaluation;
+        const alpha = currentPos.alpha;
+        const beta = currentPos.beta;
         currentPos = stack.pop();
         if (!currentPos) return evaluation;
         currentPos.evaluation = minMax(
@@ -62,18 +79,24 @@ export const injectableLinearEvaluation = (generateChildren) => (
           currentPos.isWhitesTurn
         );
 
-        // Check the stack one level higher
-        // to bail out if the opponent already
-        // has a better option then we do in the current
-        // branch
-        const prev = stack[stack.length - 1];
-        if (!prev) continue;
-        const value = minMax(
-          [currentPos.evaluation, prev.evaluation],
-          prev.isWhitesTurn
-        );
-        if (value === prev.evaluation) {
+        if (currentPos.isWhitesTurn) {
+          currentPos.alpha = Math.max(currentPos.alpha, currentPos.evaluation);
+          currentPos.beta = beta;
+        } else {
+          currentPos.alpha = alpha;
+          currentPos.beta = Math.min(currentPos.beta, currentPos.evaluation);
+        }
+
+        if (currentPos.beta <= currentPos.alpha) {
+          console.log("cut the tree");
+          const alpha = currentPos.alpha;
+          const beta = currentPos.beta;
           currentPos = stack.pop();
+
+          if (currentPos) {
+            currentPos.alpha = alpha;
+            currentPos.beta = beta;
+          }
         }
       }
     } else {
